@@ -27,6 +27,15 @@ export default function Header() {
           >
             About
           </Link>
+          <Link
+            to="/ui"
+            className="text-neutral-600 no-underline hover:text-neutral-900"
+            activeProps={{
+              className: 'text-neutral-900 no-underline hover:text-neutral-900',
+            }}
+          >
+            UI Samples
+          </Link>
         </div>
       </nav>
     </header>

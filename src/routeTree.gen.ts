@@ -11,6 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as PreviewSlugRouteImport } from './routes/preview/$slug'
+import { Route as UiIndexRouteImport } from './routes/ui/index'
+import { Route as UiSlugRouteImport } from './routes/ui/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +25,58 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PreviewSlugRoute = PreviewSlugRouteImport.update({
+  id: '/preview/$slug',
+  path: '/preview/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UiIndexRoute = UiIndexRouteImport.update({
+  id: '/ui/',
+  path: '/ui/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UiSlugRoute = UiSlugRouteImport.update({
+  id: '/ui/$slug',
+  path: '/ui/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/preview/$slug': typeof PreviewSlugRoute
+  '/ui/$slug': typeof UiSlugRoute
+  '/ui/': typeof UiIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/preview/$slug': typeof PreviewSlugRoute
+  '/ui/$slug': typeof UiSlugRoute
+  '/ui': typeof UiIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/preview/$slug': typeof PreviewSlugRoute
+  '/ui/$slug': typeof UiSlugRoute
+  '/ui/': typeof UiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about'
+  fullPaths: '/' | '/about' | '/preview/$slug' | '/ui/$slug' | '/ui/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about'
-  id: '__root__' | '/' | '/about'
+  to: '/' | '/about' | '/preview/$slug' | '/ui/$slug' | '/ui'
+  id: '__root__' | '/' | '/about' | '/preview/$slug' | '/ui/$slug' | '/ui/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  PreviewSlugRoute: typeof PreviewSlugRoute
+  UiSlugRoute: typeof UiSlugRoute
+  UiIndexRoute: typeof UiIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +95,36 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/preview/$slug': {
+      id: '/preview/$slug'
+      path: '/preview/$slug'
+      fullPath: '/preview/$slug'
+      preLoaderRoute: typeof PreviewSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ui/': {
+      id: '/ui/'
+      path: '/ui'
+      fullPath: '/ui/'
+      preLoaderRoute: typeof UiIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ui/$slug': {
+      id: '/ui/$slug'
+      path: '/ui/$slug'
+      fullPath: '/ui/$slug'
+      preLoaderRoute: typeof UiSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  PreviewSlugRoute: PreviewSlugRoute,
+  UiSlugRoute: UiSlugRoute,
+  UiIndexRoute: UiIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

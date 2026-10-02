@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/')({ component: HomePage })
 
@@ -13,6 +13,12 @@ function HomePage() {
         </code>{' '}
         にファイルを足して追加します。
       </p>
+      <Link
+        to="/ui"
+        className="mt-6 inline-flex items-center rounded-md bg-neutral-900 px-4 py-2 text-sm font-medium text-white no-underline hover:bg-neutral-700"
+      >
+        UI Samples を見る →
+      </Link>
     </main>
   )
 }
