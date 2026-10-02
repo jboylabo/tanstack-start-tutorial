@@ -18,6 +18,11 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
+        // ライト / ダーク両対応だとブラウザに伝え、Chrome の自動ダークモード等で色を書き換えられないようにする
+        name: 'color-scheme',
+        content: 'light dark',
+      },
+      {
         title: 'Tailwind UI Samples',
       },
     ],
