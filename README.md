@@ -1,211 +1,100 @@
-Welcome to your new TanStack Start app!
+# TanStack Start 練習用
 
-# Getting Started
+白い背景の Home と About だけの最小構成です。レイアウトは Next.js の一般的なページに近づけてあり、見た目は Tailwind CSS のユーティリティクラスで足していきます。
 
-To run this application:
+## 使い方
 
 ```bash
 npm install
 npm run dev
 ```
 
-# Building For Production
+http://localhost:3000 を開きます。
 
-To build this application for production:
+| パス | ファイル |
+| --- | --- |
+| `/` | `src/routes/index.tsx` |
+| `/about` | `src/routes/about.tsx` |
 
-```bash
-npm run build
-```
+全ページ共通のヘッダーとフッターは `src/routes/__root.tsx` です。ページの中身は、その中の `{children}` の位置に入ります。
 
-## Styling
+## プロジェクトごとに使い回す
 
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
+このフォルダをそのまま編集し続けると、次のプロジェクトの出発点が重くなります。練習や本番用のアプリは、コピーした側で始めます。
 
-### Removing Tailwind CSS
+GitHub では、1つのリポジトリを同じアカウントから fork できるのは1回だけです。プロジェクトごとに新しいリポジトリが欲しいときは、Template repository を使います。
 
-If you prefer not to use Tailwind CSS:
+### Fork する
 
-1. Remove the demo pages in `src/routes/demo/`
-2. Replace the Tailwind import in `src/styles.css` with your own styles
-3. Remove `tailwindcss()` from the plugins array in `vite.config.ts`
-4. Remove `@tailwindcss/vite` and `tailwindcss` from `package.json`
+元リポジトリを1つ、自分のアカウントへコピーする手順です。
 
-## Linting & Formatting
-
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
-
+1. https://github.com/jboylabo/tanstack-start-tutorial を開く
+2. 右上の **Fork** を押す
+3. オーナーとリポジトリ名を確認して **Create fork** を押す
+4. できたリポジトリを clone する
 
 ```bash
-npm run lint
-npm run format
-npm run check
+git clone https://github.com/<あなたのアカウント>/tanstack-start-tutorial.git
+cd tanstack-start-tutorial
+npm install
+npm run dev
 ```
 
+### プロジェクトごとに新しく作る
 
-## Deploy to Cloudflare Workers
+GitHub の元リポジトリで **Settings → General → Template repository** にチェックを入れます。その後、リポジトリ画面の **Use this template → Create a new repository** から、アプリごとに別リポジトリを作ります。履歴は引き継がれず、各プロジェクトは独立します。
 
-This project uses the Cloudflare Vite plugin (configured in `vite.config.ts`) and `wrangler.jsonc`:
+手元だけで複製するときは、フォルダをコピーして Git をやり直します。
 
-1. Install Wrangler: `npm install -g wrangler`
-2. Authenticate: `wrangler login`
-3. Deploy: `npx wrangler deploy`
+```bash
+cp -R tanstack-start-tutorial my-next-app
+cd my-next-app
+rm -rf .git
+git init
+npm install
+npm run dev
+```
 
-For production env vars, run `wrangler secret put MY_VAR` for each secret listed in `.env.example`. Public (non-secret) vars go in `wrangler.jsonc` under `vars`.
+## 練習する
 
-KV, D1, R2, and Durable Object bindings are configured in `wrangler.jsonc` — see https://developers.cloudflare.com/workers/wrangler/configuration/.
+右下の丸いアイコンは TanStack の開発ツールです。Home と About を行き来して、今どのルートが選ばれているかを確認します。
 
+最初に読むファイルは次の4つです。
 
+1. `src/routes/__root.tsx` — HTML 全体と共通レイアウト
+2. `src/router.tsx` — ルーターの作成
+3. `src/routes/index.tsx` — `/`
+4. `src/components/Header.tsx` — `Link` による遷移
 
-## Routing
+`src/routeTree.gen.ts` はルートファイルから自動生成されます。手で編集しません。開発サーバーが止まっているときにルートを足したら、`npm run generate-routes` を実行します。
 
-This project uses [TanStack Router](https://tanstack.com/router) with file-based routing. Routes are managed as files in `src/routes`.
+練習は、この順で1つずつ足します。
 
-### Adding A Route
+1. `src/routes/contact.tsx` を作り、`createFileRoute('/contact')` で `/contact` を増やす
+2. `src/components/Header.tsx` に、About と同じ書き方で `Link` を足す
+3. `src/routes/posts/$postId.tsx` のように、`$` 付きのファイルで `/posts/123` を受け取る
+4. ルートの `loader` で表示前にデータを取り、`Route.useLoaderData()` で描画する
+5. `createServerFn` で、画面からサーバー側の関数を呼ぶ
 
-To add a new route to your application just add a new file in the `./src/routes` directory.
+公式ドキュメントは [TanStack Router](https://tanstack.com/router/latest/docs/framework/react/overview) と [TanStack Start](https://tanstack.com/start/latest/docs/framework/react/overview) です。ファイルルートとデータ読み込みは Router、サーバー関数に入ってから Start を読むと迷いにくいです。
 
-TanStack will automatically generate the content of the route file for you.
+## スタイリング
 
-Now that you have two routes you can use a `Link` component to navigate between them.
+スタイリングの土台は [Tailwind CSS](https://tailwindcss.com/) です。色、余白、文字サイズはコンポーネントの `className` に直接書きます。
 
-### Adding Links
+入口は `src/styles.css` の次の1行です。
 
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
+```css
+@import 'tailwindcss';
+```
+
+このファイルでは、全ページ共通の下地だけを置いています。背景は白、文字色は `#111`、フォントはシステムフォントです。コンポーネント側のクラスが、この下地の上に乗ります。
 
 ```tsx
-import { Link } from "@tanstack/react-router";
+<main className="mx-auto max-w-3xl px-6 py-10">
+  <h1 className="mb-4 text-3xl font-semibold tracking-tight">Home</h1>
+  <p className="text-neutral-600">本文</p>
+</main>
 ```
 
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you render `{children}` in the `shellComponent`.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
-
-export const Route = createRootRoute({
-  head: () => ({
-    meta: [
-      { charSet: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { title: 'My App' },
-    ],
-  }),
-  shellComponent: ({ children }) => (
-    <html lang="en">
-      <head>
-        <HeadContent />
-      </head>
-      <body>
-        <header>
-          <nav>
-            <Link to="/">Home</Link>
-            <Link to="/about">About</Link>
-          </nav>
-        </header>
-        {children}
-        <Scripts />
-      </body>
-    </html>
-  ),
-})
-```
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-## Server Functions
-
-TanStack Start provides server functions that allow you to write server-side code that seamlessly integrates with your client components.
-
-```tsx
-import { createServerFn } from '@tanstack/react-start'
-
-const getServerTime = createServerFn({
-  method: 'GET',
-}).handler(async () => {
-  return new Date().toISOString()
-})
-
-// Use in a component
-function MyComponent() {
-  const [time, setTime] = useState('')
-  
-  useEffect(() => {
-    getServerTime().then(setTime)
-  }, [])
-  
-  return <div>Server time: {time}</div>
-}
-```
-
-## API Routes
-
-You can create API routes by using the `server` property in your route definitions:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-import { json } from '@tanstack/react-start'
-
-export const Route = createFileRoute('/api/hello')({
-  server: {
-    handlers: {
-      GET: () => json({ message: 'Hello, World!' }),
-    },
-  },
-})
-```
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-import { createFileRoute } from '@tanstack/react-router'
-
-export const Route = createFileRoute('/people')({
-  loader: async () => {
-    const response = await fetch('https://swapi.dev/api/people')
-    return response.json()
-  },
-  component: PeopleComponent,
-})
-
-function PeopleComponent() {
-  const data = Route.useLoaderData()
-  return (
-    <ul>
-      {data.results.map((person) => (
-        <li key={person.name}>{person.name}</li>
-      ))}
-    </ul>
-  )
-}
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
-
-For TanStack Start specific documentation, visit [TanStack Start](https://tanstack.com/start).
+Tailwind は `vite.config.ts` の `tailwindcss()` プラグインで有効になっています。別の CSS フレームワークは入っていません。
