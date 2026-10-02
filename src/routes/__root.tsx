@@ -1,13 +1,9 @@
-import {
-  HeadContent,
-  Scripts,
-  createRootRoute,
-  useRouterState,
-} from '@tanstack/react-router'
+import { HeadContent, Scripts, createRootRoute, useRouterState } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import Footer from '../components/Footer'
 import Header from '../components/Header'
+import { themeScript } from '../lib/theme'
 
 import appCss from '../styles.css?url'
 
@@ -22,7 +18,7 @@ export const Route = createRootRoute({
         content: 'width=device-width, initial-scale=1',
       },
       {
-        title: 'TanStack Start',
+        title: 'Tailwind UI Samples',
       },
     ],
     links: [
@@ -31,6 +27,7 @@ export const Route = createRootRoute({
         href: appCss,
       },
     ],
+    scripts: [{ children: themeScript }],
   }),
   shellComponent: RootDocument,
 })
@@ -41,42 +38,36 @@ function RootDocument({ children }: { children: React.ReactNode }) {
     select: (s) => s.location.pathname.startsWith('/preview/'),
   })
 
-  if (isPreview) {
-    return (
-      <html lang="ja">
-        <head>
-          <HeadContent />
-        </head>
-        <body className="bg-white text-neutral-900 antialiased">
-          {children}
-          <Scripts />
-        </body>
-      </html>
-    )
-  }
-
   return (
-    <html lang="ja">
+    // .dark はテーマスクリプトが付けるので、サーバーとの差分警告を抑える
+    <html lang="ja" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body className="flex min-h-screen flex-col bg-white text-neutral-900 antialiased">
-        <Header />
-        <div className="flex-1">{children}</div>
-        <Footer />
-        <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
-        />
-        <Scripts />
-      </body>
+      {isPreview ? (
+        <body className="bg-white text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100">
+          {children}
+          <Scripts />
+        </body>
+      ) : (
+        <body className="flex min-h-screen flex-col bg-white text-neutral-900 antialiased dark:bg-neutral-950 dark:text-neutral-100">
+          <Header />
+          <div className="flex-1">{children}</div>
+          <Footer />
+          <TanStackDevtools
+            config={{
+              position: 'bottom-right',
+            }}
+            plugins={[
+              {
+                name: 'Tanstack Router',
+                render: <TanStackRouterDevtoolsPanel />,
+              },
+            ]}
+          />
+          <Scripts />
+        </body>
+      )}
     </html>
   )
 }

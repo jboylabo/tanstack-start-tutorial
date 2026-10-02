@@ -1,45 +1,40 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
-import { categories, samples } from '../../samples/registry'
+import Gallery from '@/components/site/Gallery'
+import { uiParts } from '@/samples/registry'
 
-export const Route = createFileRoute('/ui/')({ component: GalleryPage })
+export const Route = createFileRoute('/ui/')({ component: ComponentsPage })
 
-function GalleryPage() {
+function ComponentsPage() {
   return (
-    <main className="mx-auto max-w-6xl px-6 py-10">
-      <h1 className="mb-2 text-3xl font-semibold tracking-tight">UI Samples</h1>
-      <p className="mb-10 text-neutral-600">
-        Tailwind CSS で作る業務向け UI パターン集（{samples.length} 種）。
-        各ページでプレビューとコードを確認し、そのままコピーして使えます。
-      </p>
-
-      <div className="space-y-12">
-        {categories.map((category) => (
-          <section key={category}>
-            <h2 className="mb-4 text-sm font-semibold tracking-wide text-neutral-500 uppercase">
-              {category}
-            </h2>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {samples
-                .filter((s) => s.category === category)
-                .map((s) => (
+    <Gallery collection="components">
+      {/* サンプルが組み合わせて使っている共通部品 */}
+      <section className="mb-12 rounded-2xl border border-neutral-200 bg-neutral-50 p-6 dark:border-neutral-800 dark:bg-neutral-900/50">
+        <h2 className="text-lg font-semibold">共通部品（src/components/ui）</h2>
+        <p className="mt-1 text-sm text-neutral-600 dark:text-neutral-400">
+          サンプルはこれらの部品を組み合わせて作っています。各サンプルの Code タブで部品のソースもタブ切替で確認できます。
+        </p>
+        <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {uiParts.map((p) => (
+            <div key={p.file} className="rounded-lg border border-neutral-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900">
+              <p className="font-mono text-sm font-medium">{p.name}</p>
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-400">{p.description}</p>
+              {p.usedBy.length > 0 && (
+                <p className="mt-2 text-xs">
+                  <span className="text-neutral-400">例：</span>
                   <Link
-                    key={s.slug}
                     to="/ui/$slug"
-                    params={{ slug: s.slug }}
-                    className="group rounded-lg border border-neutral-200 p-5 no-underline transition hover:border-neutral-300 hover:shadow-sm"
+                    params={{ slug: p.usedBy[0].slug }}
+                    className="text-blue-600 no-underline hover:underline dark:text-blue-400"
                   >
-                    <h3 className="font-medium text-neutral-900 group-hover:text-blue-600">
-                      {s.title}
-                    </h3>
-                    <p className="mt-1 text-sm text-neutral-500">
-                      {s.description}
-                    </p>
+                    {p.usedBy[0].title}
                   </Link>
-                ))}
+                  {p.usedBy.length > 1 && <span className="text-neutral-400"> ほか {p.usedBy.length - 1} 件</span>}
+                </p>
+              )}
             </div>
-          </section>
-        ))}
-      </div>
-    </main>
+          ))}
+        </div>
+      </section>
+    </Gallery>
   )
 }

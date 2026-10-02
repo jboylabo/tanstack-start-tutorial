@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AnimationsIndexRouteImport } from './routes/animations/index'
+import { Route as OverlaysIndexRouteImport } from './routes/overlays/index'
 import { Route as PreviewSlugRouteImport } from './routes/preview/$slug'
 import { Route as UiIndexRouteImport } from './routes/ui/index'
 import { Route as UiSlugRouteImport } from './routes/ui/$slug'
@@ -23,6 +25,16 @@ const IndexRoute = IndexRouteImport.update({
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnimationsIndexRoute = AnimationsIndexRouteImport.update({
+  id: '/animations/',
+  path: '/animations/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OverlaysIndexRoute = OverlaysIndexRouteImport.update({
+  id: '/overlays/',
+  path: '/overlays/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PreviewSlugRoute = PreviewSlugRouteImport.update({
@@ -46,6 +58,8 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/preview/$slug': typeof PreviewSlugRoute
   '/ui/$slug': typeof UiSlugRoute
+  '/animations/': typeof AnimationsIndexRoute
+  '/overlays/': typeof OverlaysIndexRoute
   '/ui/': typeof UiIndexRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +67,8 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/preview/$slug': typeof PreviewSlugRoute
   '/ui/$slug': typeof UiSlugRoute
+  '/animations': typeof AnimationsIndexRoute
+  '/overlays': typeof OverlaysIndexRoute
   '/ui': typeof UiIndexRoute
 }
 export interface FileRoutesById {
@@ -61,14 +77,38 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/preview/$slug': typeof PreviewSlugRoute
   '/ui/$slug': typeof UiSlugRoute
+  '/animations/': typeof AnimationsIndexRoute
+  '/overlays/': typeof OverlaysIndexRoute
   '/ui/': typeof UiIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/preview/$slug' | '/ui/$slug' | '/ui/'
+  fullPaths:
+    | '/'
+    | '/about'
+    | '/preview/$slug'
+    | '/ui/$slug'
+    | '/animations/'
+    | '/overlays/'
+    | '/ui/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/preview/$slug' | '/ui/$slug' | '/ui'
-  id: '__root__' | '/' | '/about' | '/preview/$slug' | '/ui/$slug' | '/ui/'
+  to:
+    | '/'
+    | '/about'
+    | '/preview/$slug'
+    | '/ui/$slug'
+    | '/animations'
+    | '/overlays'
+    | '/ui'
+  id:
+    | '__root__'
+    | '/'
+    | '/about'
+    | '/preview/$slug'
+    | '/ui/$slug'
+    | '/animations/'
+    | '/overlays/'
+    | '/ui/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +116,8 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   PreviewSlugRoute: typeof PreviewSlugRoute
   UiSlugRoute: typeof UiSlugRoute
+  AnimationsIndexRoute: typeof AnimationsIndexRoute
+  OverlaysIndexRoute: typeof OverlaysIndexRoute
   UiIndexRoute: typeof UiIndexRoute
 }
 
@@ -93,6 +135,20 @@ declare module '@tanstack/react-router' {
       path: '/about'
       fullPath: '/about'
       preLoaderRoute: typeof AboutRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/animations/': {
+      id: '/animations/'
+      path: '/animations'
+      fullPath: '/animations/'
+      preLoaderRoute: typeof AnimationsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/overlays/': {
+      id: '/overlays/'
+      path: '/overlays'
+      fullPath: '/overlays/'
+      preLoaderRoute: typeof OverlaysIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/preview/$slug': {
@@ -124,17 +180,10 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   PreviewSlugRoute: PreviewSlugRoute,
   UiSlugRoute: UiSlugRoute,
+  AnimationsIndexRoute: AnimationsIndexRoute,
+  OverlaysIndexRoute: OverlaysIndexRoute,
   UiIndexRoute: UiIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}

@@ -1,8 +1,40 @@
 @import 'tailwindcss';
 
+/* .dark クラスでダークモードを切り替える（OS 設定だけに頼らない） */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* @theme に書いた --animate-* は animate-aurora のようなクラスとして使える */
+@theme {
+  --animate-aurora: aurora 18s ease-in-out infinite alternate;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-grid-pan: grid-pan 20s linear infinite;
+
+  @keyframes aurora {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+    50% { transform: translate(8%, -6%) scale(1.15) rotate(20deg); }
+    100% { transform: translate(-6%, 8%) scale(0.95) rotate(-10deg); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes grid-pan {
+    to { background-position: 48px 48px; }
+  }
+}
+
 body {
   margin: 0;
-  background: #fff;
-  color: #111;
   font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+/* shiki の dual theme：ライトは --shiki-light、.dark では --shiki-dark を使う */
+.shiki,
+.shiki span {
+  color: var(--shiki-light);
+  background-color: transparent !important;
+}
+.dark .shiki,
+.dark .shiki span {
+  color: var(--shiki-dark);
 }

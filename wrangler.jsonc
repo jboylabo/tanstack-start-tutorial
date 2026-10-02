@@ -3,5 +3,12 @@
   "name": "tanstack-start-app",
   "compatibility_date": "2025-09-02",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry"
+  "main": "@tanstack/react-start/server-entry",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "ui.jboylab.dev",
+      "custom_domain": true
+    }
+  ]
 }
