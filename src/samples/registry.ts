@@ -102,7 +102,7 @@ const metas: Record<CollectionKey, SampleMeta[]> = {
     { slug: 'native-dialog', title: 'Native Dialog', category: 'Popups', description: 'HTML 標準の <dialog> と backdrop: / open: を使ったモーダル。', docs: ['hover-focus-and-other-states', 'backdrop-filter-blur'] },
     // Panels
     { slug: 'drawer', title: 'Drawer', category: 'Panels', description: '右からスライドして出るパネル（詳細表示・編集フォーム）。', docs: ['translate', 'transition-property', 'position'] },
-    { slug: 'notification-panel', title: 'Notification Panel', category: 'Panels', description: 'ベルアイコンから開く通知一覧（未読・既読）。', docs: ['position', 'overflow', 'divide-color'] },
+    { slug: 'notification-panel', title: 'Notification Panel', category: 'Panels', description: 'ベルアイコンから開く通知一覧（未読・既読）。', docs: ['position', 'overflow', 'border-color'] },
   ],
 }
 

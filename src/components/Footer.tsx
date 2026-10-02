@@ -1,6 +1,6 @@
 const officialLinks = [
   { href: 'https://tailwindcss.com/', label: 'Tailwind CSS 公式' },
-  { href: 'https://tailwindcss.com/docs/installation', label: 'Docs' },
+  { href: 'https://tailwindcss.com/docs', label: 'Docs' },
   { href: 'https://tailwindcss.com/docs/colors', label: 'Colors（カラーパレット）' },
   { href: 'https://tailwindcss.com/docs/responsive-design', label: 'Responsive design' },
   { href: 'https://tailwindcss.com/docs/hover-focus-and-other-states', label: 'Hover, focus & states' },
